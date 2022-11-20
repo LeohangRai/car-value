@@ -14,4 +14,29 @@ export class UsersService {
     const user = this.repo.create({ email, password });
     return this.repo.save(user);
   }
+
+  async findOne(id: number) {
+    return this.repo.findOneBy({ id });
+  }
+
+  find(email: string) {
+    return this.repo.findBy({ email });
+  }
+
+  async update(id: number, updateData: Partial<User>) {
+    const user = await this.findOne(id);
+    if (!user) {
+      throw new Error('No users with the given ID.');
+    }
+    Object.assign(user, updateData);
+    return this.repo.save(user);
+  }
+
+  async remove(id: number) {
+    const user = await this.findOne(id);
+    if (!user) {
+      throw new Error('No users with the given ID.');
+    }
+    return this.repo.remove(user);
+  }
 }
