@@ -6,15 +6,15 @@ import {
   Param,
   Patch,
   Post,
-  Query,
-  UseInterceptors
+  Query
 } from '@nestjs/common';
-import { SerializeInterceptor } from 'src/interceptors/serialize.intercept';
+import { Serialize } from 'src/interceptors/serialize.intercept';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { UpdateUserDto } from './dtos/update-user.dto';
 import { UserDto } from './dtos/user.dto';
 import { UsersService } from './users.service';
 @Controller('auth')
+@Serialize(UserDto)
 export class UsersController {
   constructor(private usersService: UsersService) {}
 
@@ -23,7 +23,7 @@ export class UsersController {
     return this.usersService.find(email);
   }
 
-  @UseInterceptors(new SerializeInterceptor(UserDto))
+  @Serialize(UserDto)
   @Get('/:id')
   findOne(@Param('id') id: string) {
     return this.usersService.findOne(Number(id));
