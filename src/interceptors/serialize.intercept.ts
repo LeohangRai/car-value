@@ -28,6 +28,14 @@ export class SerializeInterceptor implements NestInterceptor {
 }
 
 /* custom serialization decorator that wraps our interceptor class */
-export function Serialize(dto: any) {
+export function Serialize(dto: ClassConstructor) {
   return UseInterceptors(new SerializeInterceptor(dto));
+}
+
+/* 
+  interface to use for type annotation in our decorator parameter, 
+  allows only classes to be passed as an argument
+*/
+interface ClassConstructor {
+  new (...args: any[]): {};
 }
