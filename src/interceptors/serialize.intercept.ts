@@ -36,6 +36,8 @@ export function Serialize(dto: ClassConstructor) {
   interface to use for type annotation in our decorator parameter, 
   allows only classes to be passed as an argument
 */
+/* eslint-disable */
 interface ClassConstructor {
   new (...args: any[]): {};
 }
+/* eslint-enable */

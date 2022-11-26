@@ -3,7 +3,17 @@ POST http://localhost:3000/auth/signup
 content-type: application/json
 
 {
-    "email": "johndoe@gmail.com",
+    "email": "unique@gmail.com",
+    "password": "helloworld123"
+}
+
+
+### Login
+POST http://localhost:3000/auth/login
+content-type: application/json
+
+{
+    "email": "unique@gmail.com",
     "password": "helloworld123"
 }
 
@@ -12,7 +22,7 @@ GET http://localhost:3000/auth/2
 
 
 ### Find all users with a given email
-GET http://localhost:3000/auth?email=johndoe@gmail.com
+GET http://localhost:3000/auth?email=unique@gmail.com
 
 
 ### Update a user with given ID
