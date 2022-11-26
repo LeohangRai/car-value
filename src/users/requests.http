@@ -17,6 +17,13 @@ content-type: application/json
     "password": "helloworld123"
 }
 
+### Get the currently signed in user
+GET http://localhost:3000/auth/whoami
+
+
+### Logout
+POST http://localhost:3000/auth/logout
+
 ### Find a user by ID
 GET http://localhost:3000/auth/2 
 
@@ -36,3 +43,10 @@ content-type: application/json
 
 ### Delete a user with given ID
 DELETE http://localhost:3000/auth/2
+
+
+### Set color
+GET http://localhost:3000/auth/set-color/red
+
+### Get color 
+GET http://localhost:3000/auth/color

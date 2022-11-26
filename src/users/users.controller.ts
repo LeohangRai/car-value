@@ -6,7 +6,8 @@ import {
   Param,
   Patch,
   Post,
-  Query
+  Query,
+  Session
 } from '@nestjs/common';
 import { Serialize } from 'src/interceptors/serialize.intercept';
 import { AuthService } from './auth.service';
@@ -27,6 +28,21 @@ export class UsersController {
     return this.usersService.find(email);
   }
 
+  @Get('/set-color/:color')
+  setColor(@Param('color') color: string, @Session() session: any) {
+    session.color = color;
+  }
+
+  @Get('/color')
+  getColor(@Session() session: any) {
+    return session.color;
+  }
+
+  @Get('/whoami')
+  whoAmI(@Session() session: any) {
+    return this.usersService.findOne(session.userId);
+  }
+
   @Serialize(UserDto)
   @Get('/:id')
   findOne(@Param('id') id: string) {
@@ -34,13 +50,22 @@ export class UsersController {
   }
 
   @Post('/signup')
-  createUser(@Body() body: CreateUserDto) {
-    return this.authService.signup(body.email, body.password);
+  async createUser(@Body() body: CreateUserDto, @Session() session: any) {
+    const user = await this.authService.signup(body.email, body.password);
+    session.userId = user.id;
+    return user;
   }
 
   @Post('/login')
-  login(@Body() body: CreateUserDto) {
-    return this.authService.login(body.email, body.password);
+  async login(@Body() body: CreateUserDto, @Session() session: any) {
+    const user = await this.authService.login(body.email, body.password);
+    session.userId = user.id;
+    return user;
+  }
+
+  @Post('/logout')
+  logout(@Session() session: any) {
+    session.userId = null;
   }
 
   @Patch('/:id')
