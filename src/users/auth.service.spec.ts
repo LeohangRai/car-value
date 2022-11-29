@@ -36,14 +36,14 @@ describe('AuthService', () => {
     expect(service).toBeDefined();
   });
 
-  it('creates a new users with a hashed and salted password', async () => {
+  it('creates a new user with a hashed and salted password', async () => {
     const user = await service.signup('greencity@gmail.com', 'helloworld123');
     const [salt, hash] = user.password.split('.');
     expect(salt).toBeDefined();
     expect(hash).toBeDefined();
   });
 
-  it('throws an error if the user signs up with an email that is already in use', async () => {
+  it('throws an error if signup is called with an email that is already in use', async () => {
     /* overriding the find() method to return a non-empty array for current test scenario */
     fakeUsersService.find = () =>
       Promise.resolve([
@@ -86,7 +86,7 @@ describe('AuthService', () => {
     ).rejects.toThrow(BadRequestException);
   });
 
-  it('returns a user instance if valid email and password are provided', async () => {
+  it('returns a user instance if login is called with valid email and password', async () => {
     const email = 'greencity@gmail.com';
     const password = 'helloworld123';
     /* manually generated hashed and salted version of password */
