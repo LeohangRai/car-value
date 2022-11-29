@@ -68,7 +68,7 @@ describe('AuthService', () => {
     ).rejects.toThrow(BadRequestException);
   });
 
-  it('throws an error if an invalid password is provided', async () => {
+  it('throws an error if login is called with an invalid password', async () => {
     /* 
     overriding the find() method to return a non-empty array for current test scenario
     because we want the password comparison blocks to run and returning an empty array would result in throwing of BadRequestException in an earlier phase, which would block the password comparison logic from executing 
@@ -84,5 +84,25 @@ describe('AuthService', () => {
     await expect(
       service.login('greencity@gmail.com', 'random-password')
     ).rejects.toThrow(BadRequestException);
+  });
+
+  it('returns a user instance if valid email and password are provided', async () => {
+    const email = 'greencity@gmail.com';
+    const password = 'helloworld123';
+    /* manually generated hashed and salted version of password */
+    const hashedSaltedPassword =
+      '463c11930e725541.428b5483efc6b3ac62180e1827006895915c1c523b201d157bb34287cc7a5409';
+
+    fakeUsersService.find = () =>
+      Promise.resolve([
+        {
+          id: 1,
+          email,
+          password: hashedSaltedPassword
+        } as User
+      ]);
+
+    const user = await service.login(email, password);
+    expect(user).toBeDefined();
   });
 });
