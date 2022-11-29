@@ -57,4 +57,32 @@ describe('AuthService', () => {
       service.signup('greencity@gmail.com', 'helloworld123')
     ).rejects.toThrow(BadRequestException);
   });
+
+  it('throws an error if login is called with an unused email', async () => {
+    /* 
+    no need to override the fakeUsersService.find() method to return a non-empty array for current test scenario
+    because we just want to test whether an exception is thrown when no users are found for the given email, i.e. when the usersService returns an empty array
+    */
+    await expect(
+      service.login('unused@gmail.com', 'helloworld123')
+    ).rejects.toThrow(BadRequestException);
+  });
+
+  it('throws an error if an invalid password is provided', async () => {
+    /* 
+    overriding the find() method to return a non-empty array for current test scenario
+    because we want the password comparison blocks to run and returning an empty array would result in throwing of BadRequestException in an earlier phase, which would block the password comparison logic from executing 
+    */
+    fakeUsersService.find = () =>
+      Promise.resolve([
+        {
+          id: 1,
+          email: 'greencity@gmail.com',
+          password: 'helloworld123'
+        } as User
+      ]);
+    await expect(
+      service.login('greencity@gmail.com', 'random-password')
+    ).rejects.toThrow(BadRequestException);
+  });
 });
