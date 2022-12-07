@@ -9,7 +9,7 @@ import {
   Query,
   Session
 } from '@nestjs/common';
-import { Serialize } from 'src/interceptors/serialize.intercept';
+import { Serialize } from '../interceptors/serialize.intercept';
 import { AuthService } from './auth.service';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { UpdateUserDto } from './dtos/update-user.dto';
