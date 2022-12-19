@@ -29,4 +29,23 @@ describe('AppController (e2e)', () => {
         expect(email).toEqual(payload.email);
       });
   });
+
+  it('signs up a new user then gets the currently logged in user', async () => {
+    const payload = {
+      email: 'randomemail7@gmail.com',
+      password: 'helloworld123'
+    };
+    const res = await request(app.getHttpServer())
+      .post('/auth/signup')
+      .send(payload)
+      .expect(201);
+    const cookie = res.get('Set-Cookie');
+
+    const { body } = await request(app.getHttpServer())
+      .get('/auth/whoami')
+      .set('Cookie', cookie)
+      .expect(200);
+
+    expect(body.email).toEqual(payload.email);
+  });
 });
