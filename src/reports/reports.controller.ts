@@ -1,9 +1,11 @@
 import {
   Controller,
+  Get,
   Post,
   Patch,
   Body,
   Param,
+  Query,
   UseGuards
 } from '@nestjs/common';
 import { CreateReportDto } from './dtos/create-report.dto';
@@ -15,6 +17,7 @@ import { User } from '../users/user.entity';
 import { ReportDto } from './dtos/report.dto';
 import { ApproveReportDto } from './dtos/approve-report.dto';
 import { Serialize } from '../interceptors/serialize.intercept';
+import { GetEstimateDto } from './dtos/get-estimate.dto';
 
 @Controller('reports')
 export class ReportsController {
@@ -25,6 +28,11 @@ export class ReportsController {
   @Serialize(ReportDto)
   createReport(@Body() body: CreateReportDto, @CurrentUser() user: User) {
     return this.reportsService.create(body, user);
+  }
+
+  @Get()
+  getEstimate(@Query() query: GetEstimateDto) {
+    return this.reportsService.getEstimate(query);
   }
 
   @Patch('/:id')
