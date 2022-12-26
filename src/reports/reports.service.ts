@@ -27,9 +27,16 @@ export class ReportsService {
   getEstimate(estimateDto: GetEstimateDto) {
     return this.repo
       .createQueryBuilder()
-      .select('*')
-      .where('make = :make', { make: estimateDto.make })
+      .select('AVG(price)', 'price')
+      .where('approved IS TRUE')
+      .andWhere('make = :make', { make: estimateDto.make })
       .andWhere('model = :model', { model: estimateDto.model })
-      .getRawMany();
+      .andWhere('lng - :lng BETWEEN -5 AND 5', { lng: estimateDto.lng })
+      .andWhere('lat - :lat BETWEEN -5 AND 5', { lat: estimateDto.lat })
+      .andWhere('year - :year BETWEEN -3 AND 3', { year: estimateDto.year })
+      .orderBy('ABS(milesTravelled - :milesTraveled)', 'DESC')
+      .setParameters({ milesTravlled: estimateDto.milesTravelled })
+      .limit(3)
+      .getRawOne();
   }
 }
